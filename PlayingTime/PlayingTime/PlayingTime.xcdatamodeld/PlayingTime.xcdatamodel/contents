@@ -1,4 +1,118 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="true" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17511" systemVersion="19H1417" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CoachingNote" representedClassName="CoachingNote" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="text" optional="YES" attributeType="String"/>
+        <relationship name="player" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="coachingNotes" inverseEntity="Player"/>
+    </entity>
+    <entity name="Configuration" representedClassName="Configuration" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="lines" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Line" inverseName="configuration" inverseEntity="Line"/>
+        <relationship name="lineup" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Configuration" inverseName="lineup" inverseEntity="Configuration"/>
+    </entity>
+    <entity name="EmergencyContact" representedClassName="EmergencyContact" syncable="YES" codeGenerationType="class">
+        <attribute name="email" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="phoneNumber" optional="YES" attributeType="String"/>
+        <attribute name="relationship" optional="YES" attributeType="String"/>
+        <relationship name="player" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Player" inverseName="emergencyContacts" inverseEntity="Player"/>
+    </entity>
+    <entity name="Game" representedClassName="Game" syncable="YES" codeGenerationType="class">
+        <attribute name="currentHalf" optional="YES" attributeType="Integer 16" usesScalarValueType="YES"/>
+        <attribute name="isFinished" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="minutesPerHalf" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="currentLineup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lineup" inverseName="game" inverseEntity="Lineup"/>
+        <relationship name="goals" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Goal" inverseName="gameScoredIn" inverseEntity="Goal"/>
+        <relationship name="plannedSubstitutions" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Substitution" inverseName="game" inverseEntity="Substitution"/>
+        <relationship name="previousLineups" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Lineup" inverseName="previousGames" inverseEntity="Lineup"/>
+        <relationship name="previousSubstitutions" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Substitution" inverseName="previousGameSubstitutions" inverseEntity="Substitution"/>
+        <relationship name="scoringPlayers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Player" inverseName="gamesScoredIn" inverseEntity="Player"/>
+    </entity>
+    <entity name="GameSummary" representedClassName="GameSummary" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <relationship name="game" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Game"/>
+    </entity>
+    <entity name="Goal" representedClassName="Goal" syncable="YES" codeGenerationType="class">
+        <attribute name="goalType" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="time" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="gameScoredIn" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Game" inverseName="goals" inverseEntity="Game"/>
+        <relationship name="scoredBy" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="goalsScored" inverseEntity="Player"/>
+    </entity>
+    <entity name="Line" representedClassName="Line" syncable="YES" codeGenerationType="class">
+        <attribute name="playerCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration" inverseName="lines" inverseEntity="Configuration"/>
+        <relationship name="position" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Position" inverseName="line" inverseEntity="Position"/>
+    </entity>
+    <entity name="Lineup" representedClassName="Lineup" syncable="YES" codeGenerationType="class">
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="configuration" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Configuration"/>
+        <relationship name="game" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Game" inverseName="currentLineup" inverseEntity="Game"/>
+        <relationship name="players" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Player" inverseName="lineups" inverseEntity="Player"/>
+        <relationship name="previousGames" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Game" inverseName="previousLineups" inverseEntity="Game"/>
+    </entity>
+    <entity name="Player" representedClassName="Player" syncable="YES" codeGenerationType="class">
+        <attribute name="birthday" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="currentGameGoalCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="gameAbsencesCount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="gamePlayingTime" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="gameSidelineTime" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="isPlaying" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="keeperPlayingTime" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="number" optional="YES" attributeType="String"/>
+        <attribute name="photo" optional="YES" attributeType="Binary"/>
+        <attribute name="seasonGoalCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="seasonPlayingTime" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="seasonPlayingTimeExcludingKeeper" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="subCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="coachingNotes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CoachingNote" inverseName="player" inverseEntity="CoachingNote"/>
+        <relationship name="currentPosition" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Position" inverseName="currentPlayer" inverseEntity="Position"/>
+        <relationship name="emergencyContacts" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="EmergencyContact" inverseName="player" inverseEntity="EmergencyContact"/>
+        <relationship name="gamesScoredIn" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Game" inverseName="scoringPlayers" inverseEntity="Game"/>
+        <relationship name="goalsScored" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Goal" inverseName="scoredBy" inverseEntity="Goal"/>
+        <relationship name="lineups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Lineup" inverseName="players" inverseEntity="Lineup"/>
+        <relationship name="postionHistory" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Position" inverseName="playerHistory" inverseEntity="Position"/>
+        <relationship name="sibling" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Player" inverseName="sibling" inverseEntity="Player"/>
+        <relationship name="substitutionIncomingPlayer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Substitution" inverseName="incomingPlayer" inverseEntity="Substitution"/>
+        <relationship name="substitutionOutgoingPlayer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Substitution" inverseName="outgoingPlayer" inverseEntity="Substitution"/>
+        <relationship name="teams" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Team" inverseName="players" inverseEntity="Team"/>
+    </entity>
+    <entity name="Position" representedClassName="Position" syncable="YES" codeGenerationType="class">
+        <attribute name="lineType" optional="YES" attributeType="String"/>
+        <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="currentPlayer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="currentPosition" inverseEntity="Player"/>
+        <relationship name="line" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Line" inverseName="position" inverseEntity="Line"/>
+        <relationship name="playerHistory" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Player" inverseName="postionHistory" inverseEntity="Player"/>
+    </entity>
+    <entity name="Substitution" representedClassName="Substitution" syncable="YES" codeGenerationType="class">
+        <attribute name="isComplete" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="time" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="game" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Game" inverseName="plannedSubstitutions" inverseEntity="Game"/>
+        <relationship name="incomingPlayer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="substitutionIncomingPlayer" inverseEntity="Player"/>
+        <relationship name="outgoingPlayer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Player" inverseName="substitutionOutgoingPlayer" inverseEntity="Player"/>
+        <relationship name="previousGameSubstitutions" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Game" inverseName="previousSubstitutions" inverseEntity="Game"/>
+    </entity>
+    <entity name="Team" representedClassName="Team" syncable="YES" codeGenerationType="class">
+        <attribute name="color" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="players" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Player" inverseName="teams" inverseEntity="Player"/>
+    </entity>
+    <elements>
+        <element name="CoachingNote" positionX="635.94140625" positionY="-32.1328125" width="128" height="88"/>
+        <element name="Configuration" positionX="63.50390625" positionY="469.578125" width="128" height="88"/>
+        <element name="EmergencyContact" positionX="60.70703125" positionY="107.54296875" width="128" height="118"/>
+        <element name="Game" positionX="-115.6640625" positionY="598.87109375" width="128" height="193"/>
+        <element name="GameSummary" positionX="573.50390625" positionY="203.8828125" width="128" height="88"/>
+        <element name="Line" positionX="371.65625" positionY="493.25" width="128" height="103"/>
+        <element name="Lineup" positionX="-344.29296875" positionY="314.59765625" width="128" height="118"/>
+        <element name="Player" positionX="773.2109375" positionY="169.56640625" width="128" height="418"/>
+        <element name="Position" positionX="838.01171875" positionY="-26.6328125" width="128" height="133"/>
+        <element name="Substitution" positionX="686.89453125" positionY="608.47265625" width="128" height="133"/>
+        <element name="Team" positionX="307.2421875" positionY="-6.80078125" width="128" height="88"/>
+        <element name="Goal" positionX="342" positionY="369" width="128" height="103"/>
+    </elements>
 </model>
